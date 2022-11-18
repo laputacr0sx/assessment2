@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Game for Guessing Number</title>
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+			integrity="sha384
+Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+			crossorigin="anonymous"
+		/>
+		<link rel="StyleSheet" href="./style.css" />
+
+		<script>
+			let guess; // storing the guessing number
+			let MAXATTEMPT = 10; // maximum number for attempting
+			let min = 1;
+			let max = 100;
+			let attemptCount = 0; // counting for number of attempts
+
+			function updateRangeValue() {
+				document.getElementById('minArea').innerHTML = min;
+				document.getElementById('maxArea').innerHTML = max;
+			}
+
+			function generateNumber() {
+				secretNumber = Math.round(Math.random() * 99, 0) + 1;
+				console.log(`Secret Number ${secretNumber}`); // log generated number
+			}
+
+			function checkMaximum() {
+				return attemptCount >= MAXATTEMPT ? true : false;
+			}
+
+			function checking() {
+				var message;
+				// Obtain the guess number
+				guess = parseInt(document.getElementById('guessNumber').value);
+				// Validation and m atching
+				attemptCount++;
+				if (isNaN(guess) || guess == null) {
+					message = 'Invalid Number !';
+				} else if (guess > max || guess < min) {
+					message = 'Not within the range !';
+				} else if (guess == secretNumber) {
+					message = 'Extra Match! Congratulation. ';
+				} else if (guess > secretNumber) {
+					max = guess - 1;
+					message = 'Not Match! The number is too large.';
+				} else if (guess < secretNumber) {
+					min = guess + 1;
+					message = 'Not Match! The number is too small.';
+				}
+
+				message += `<br />You have attempted ${attemptCount} time(s).`;
+
+				var exceed = checkMaximum();
+				if (exceed == true) {
+					message += `<br />Maximum Attempt s reached! The secret number is ${secretNumber}.`;
+				}
+				// Display response message
+				document.getElementById('result').innerHTML = message;
+				// Update the number hint
+				if (guess != secretNumber) {
+					updateRangeValue();
+				}
+			}
+		</script>
+	</head>
+
+	<body onLoad="generateNumber(); updateRangeValue()">
+		<header>
+			<h1>Game for Guessing Number</h1>
+		</header>
+
+		<div id="captionArea">
+			<h3>
+				Enter a number between
+				<span id="minArea"></span>
+				and
+				<span id="maxArea"></span>
+			</h3>
+		</div>
+
+		<div>
+			<form>
+				<input type="number" id="guessNumber" />
+				<input
+					type="button"
+					<button
+					type="button"
+					class="btn btn primary btn sm"
+					onClick="checking()"
+					id="guessBtn"
+					value="Guess"
+				/>
+			</form>
+		</div>
+		<div id="result"></div>
+	</body>
+	<script
+		src="https://code.jquery.com/jquery 3.4.1.min.js"
+		integrity="sha256 CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+		crossorigin="anonymous"
+	></script>
+</html>

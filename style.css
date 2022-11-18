@@ -1,0 +1,32 @@
+body {
+	padding: 10px;
+}
+header {
+	text-align: center;
+	border: 3px solid;
+	background-color: orange;
+	color: black;
+}
+#captionArea {
+	margin-top: 30px;
+	text-align: center;
+}
+#captionArea {
+	margin-top: 30px;
+	text-align: center;
+}
+#guessArea {
+	margin-top: 20px;
+	font-size: 15pt;
+	text-align: center;
+}
+
+#result {
+	font-size: 14px;
+	font-weight: bold;
+	color: blue;
+	text-align: center;
+}
+.right {
+	text-align: right;
+}
