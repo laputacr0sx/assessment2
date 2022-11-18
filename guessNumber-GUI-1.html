@@ -74,6 +74,7 @@
 				secretNumber = Math.round(Math.random() * 99, 0) + 1;
 				console.log(`Secret Number ${secretNumber}`); // log generated number
 			}
+
 			function checkMaximum() {
 				return attemptCount >= MAXATTEMPT ? true : false;
 			}
@@ -91,10 +92,12 @@
 				} else if (guess == secretNumber) {
 					message = 'Extra Match! Congratulation. ';
 				} else if (guess > secretNumber) {
-					max = guess - 1;
+					// max = guess - 1;
+					max = guess;
 					message = 'Not Match! The number is too large.';
 				} else if (guess < secretNumber) {
-					min = guess + 1;
+					// min = guess + 1;
+					min = guess;
 					message = 'Not Match! The number is too small.';
 				}
 				message += `<br />You have attempted ${attemptCount} time(s).`;
@@ -122,14 +125,13 @@
 					//To continue another round
 					$('#buttonArea1').hide();
 					$('#buttonArea2').show();
-					generateNumber();
-					updateRangeValue();
 				}
 			}
 
 			function askContinue() {
 				$('#buttonArea1').show();
 				$('#buttonArea2').hide();
+				updateRangeValue();
 			}
 
 			// JQuery bellow
@@ -159,6 +161,8 @@
 				$('#guessNumber').val('');
 				$('#result').html('');
 				endGame(false);
+				attemptCount = 0;
+				generateNumber();
 			});
 
 			$('#stopBtn').click(function () {
@@ -167,6 +171,12 @@
 					endGame(true);
 				}
 			});
+
+			$('#guessNumber').keypress(function (event) {
+				if (event.keyCode === 10 || event.keyCode === 13) {
+					event.preventDefault();
+				}
+			}); // Do not carry out its functionality
 		</script>
 	</body>
 </html>
