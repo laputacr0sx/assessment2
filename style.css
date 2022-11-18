@@ -21,6 +21,11 @@ header {
 	text-align: center;
 }
 
+#userInput {
+	display: flex;
+	justify-content: center;
+}
+
 #result {
 	font-size: 14px;
 	font-weight: bold;

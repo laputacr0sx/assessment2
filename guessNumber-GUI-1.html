@@ -5,29 +5,75 @@
 		<link
 			rel="stylesheet"
 			href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-			integrity="sha384
-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+			integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 			crossorigin="anonymous"
 		/>
 		<link rel="StyleSheet" href="./style.css" />
-
+		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"
+		></script>
 		<script>
-			let guess; // storing the guessing number
-			let MAXATTEMPT = 10; // maximum number for attempting
-			let min = 1;
-			let max = 100;
-			let attemptCount = 0; // counting for number of attempts
+			var guess; // storing the guessing number
+			var MAXATTEMPT = 10; // maximum number for attempting
+			var min = 1;
+			var max = 100;
+			var attemptCount = 0; // counting for number of attempts
+		</script>
+	</head>
 
+	<body>
+		<header>
+			<h1>Game for Guessing Number</h1>
+		</header>
+
+		<div id="captionArea">
+			<h3>
+				Enter a number between
+				<span id="minArea"></span>
+				and
+				<span id="maxArea"></span>
+			</h3>
+		</div>
+		<div>
+			<form>
+				<p>
+					<input type="number" id="guessNumber" />
+				</p>
+				<div id="buttonArea1">
+					<button type="button" class="btn btn danger btn sm" id="stopBtn">
+						Leave
+					</button>
+					<button type="button" class="btn btn secondary btn sm" id="repeatBtn">
+						Next Game
+					</button>
+				</div>
+				<div id="buttonArea2">
+					<button type="button" class="btn btn danger btn sm" id="giveUpBtn">
+						Give Up
+					</button>
+					<button type="button" class="btn btn primary btn sm" id="guessBtn">
+						Guess
+					</button>
+				</div>
+			</form>
+		</div>
+		<div id="result"></div>
+		<script>
 			function updateRangeValue() {
-				document.getElementById('minArea').innerHTML = min;
-				document.getElementById('maxArea').innerHTML = max;
+				$('#minArea').html(min);
+				$('#maxArea').html(max);
+				$('#guessNumber').attr({
+					max: max,
+					min: min,
+				});
 			}
 
 			function generateNumber() {
 				secretNumber = Math.round(Math.random() * 99, 0) + 1;
 				console.log(`Secret Number ${secretNumber}`); // log generated number
 			}
-
 			function checkMaximum() {
 				return attemptCount >= MAXATTEMPT ? true : false;
 			}
@@ -35,8 +81,8 @@ Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 			function checking() {
 				var message;
 				// Obtain the guess number
-				guess = parseInt(document.getElementById('guessNumber').value);
-				// Validation and m atching
+				guess = parseInt($('#guessNumber').val());
+				// Validation and matching
 				attemptCount++;
 				if (isNaN(guess) || guess == null) {
 					message = 'Invalid Number !';
@@ -51,56 +97,76 @@ Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 					min = guess + 1;
 					message = 'Not Match! The number is too small.';
 				}
-
 				message += `<br />You have attempted ${attemptCount} time(s).`;
-
 				var exceed = checkMaximum();
 				if (exceed == true) {
 					message += `<br />Maximum Attempt s reached! The secret number is ${secretNumber}.`;
 				}
 				// Display response message
-				document.getElementById('result').innerHTML = message;
+				$('#result').html(message);
 				// Update the number hint
 				if (guess != secretNumber) {
 					updateRangeValue();
 				}
+
+				if (guess == secretNumber || exceed == true) {
+					askContinue();
+				}
 			}
+
+			function endGame(opt) {
+				//To stop the game
+				if (opt == true) {
+					window.close();
+				} else {
+					//To continue another round
+					$('#buttonArea1').hide();
+					$('#buttonArea2').show();
+					generateNumber();
+					updateRangeValue();
+				}
+			}
+
+			function askContinue() {
+				$('#buttonArea1').show();
+				$('#buttonArea2').hide();
+			}
+
+			// JQuery bellow
+			$(document).ready(function () {
+				generateNumber();
+				updateRangeValue();
+				endGame(false);
+			});
+
+			$('#guessBtn').click(function () {
+				checking();
+			});
+
+			$('#giveUpBtn').click(function () {
+				var confirm = window.confirm(
+					'Are you sure you want to quit this round?'
+				);
+				if (confirm == true) {
+					message = `<br />You have attempted ${attemptCount} time(s).`;
+					message += `<br />The secret number is ${secretNumber}.`;
+					$('#result').html(message);
+				}
+				askContinue();
+			});
+
+			$('#repeatBtn').click(function () {
+				$('#guessNumber').val('');
+				$('#result').html('');
+				endGame(false);
+			});
+
+			$('#stopBtn').click(function () {
+				var confirm = window.confirm('Are you sure to leave?');
+				if (confirm == true) {
+					endGame(true);
+				}
+			});
 		</script>
-	</head>
-
-	<body onLoad="generateNumber(); updateRangeValue()">
-		<header>
-			<h1>Game for Guessing Number</h1>
-		</header>
-
-		<div id="captionArea">
-			<h3>
-				Enter a number between
-				<span id="minArea"></span>
-				and
-				<span id="maxArea"></span>
-			</h3>
-		</div>
-
-		<div>
-			<form>
-				<input type="number" id="guessNumber" />
-				<input
-					type="button"
-					<button
-					type="button"
-					class="btn btn primary btn sm"
-					onClick="checking()"
-					id="guessBtn"
-					value="Guess"
-				/>
-			</form>
-		</div>
-		<div id="result"></div>
 	</body>
-	<script
-		src="https://code.jquery.com/jquery 3.4.1.min.js"
-		integrity="sha256 CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-		crossorigin="anonymous"
-	></script>
 </html>
